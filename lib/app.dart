@@ -5,12 +5,9 @@ import 'package:playground/pages/pages.dart';
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List<PlaygroundPage> pages = List<PlaygroundPage>();
+    List<PlaygroundBase> pages = List<PlaygroundBase>();
 
-    pages.add(PlaygroundPage(
-        content: ListStickyHeaderPage(),
-        title: Text('List sticky header'),
-        route: 'list-sticky-header'));
+    pages.add(ListStickyHeaderPage());
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -23,11 +20,11 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  _routes(BuildContext context, List<PlaygroundPage> pages) {
+  _routes(BuildContext context, List<PlaygroundBase> pages) {
     Map<String, WidgetBuilder> routes = Map<String, WidgetBuilder>();
     pages.forEach((page) {
-      WidgetBuilder widgetBuilder = (BuildContext context) => page.content;
-      routes.putIfAbsent(page.route, () => widgetBuilder);
+      WidgetBuilder widgetBuilder = (BuildContext context) => page;
+      routes.putIfAbsent(page.route(), () => widgetBuilder);
     });
     return routes;
   }
@@ -45,3 +42,12 @@ class PlaygroundPage {
       this.subtitle,
       @required this.route});
 }
+
+abstract class PlaygroundInterface {
+  Widget title();
+  Widget subtitle();
+  String route();
+}
+
+abstract class PlaygroundBase extends StatelessWidget
+    implements PlaygroundInterface {}
