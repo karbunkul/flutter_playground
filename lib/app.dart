@@ -48,10 +48,10 @@ abstract class PlaygroundBase extends StatelessWidget
     IconData iconData;
     switch (playgroundType()) {
       case PlaygroundType.widget:
-        iconData = Icons.healing;
+        iconData = Icons.extension;
         break;
       default:
-        iconData = Icons.new_releases;
+        iconData = Icons.extension;
     }
 
     return Icon(iconData);

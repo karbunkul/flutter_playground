@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class ListStickyHeader extends StatefulWidget {
@@ -9,47 +12,29 @@ class ListStickyHeader extends StatefulWidget {
   _ListStickyHeaderState createState() => _ListStickyHeaderState();
 }
 
-class _ListStickyHeaderState extends State<ListStickyHeader>
-    with WidgetsBindingObserver {
-  double _topPadding = 0.0;
+class _ListStickyHeaderState extends State<ListStickyHeader> {
   final GlobalKey _key = GlobalKey();
 
+  StreamController<double> _paddingController = StreamController<double>();
+  Stream<double> get padding => _paddingController.stream;
+
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) => _postFrameCallback());
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _postFrameCallback());
   }
 
   _postFrameCallback() {
-    _persistentFrameCallback();
-    WidgetsBinding.instance
-        .addPersistentFrameCallback((_) => _persistentFrameCallback());
-  }
-
-  _persistentFrameCallback() {
     try {
       final RenderBox renderBox = _key.currentContext.findRenderObject();
-      setState(() {
-        _topPadding = renderBox.size.height;
-      });
+      _paddingController.sink.add(renderBox.size.height);
     } catch (_) {
-      setState(() {
-        _topPadding = 0.0;
-      });
+      _paddingController.sink.add(0.0);
     }
   }
 
   @override
-  void deactivate() {
-    print('deactivate');
-    //WidgetsBinding.instance.cancelFrameCallbackWithId(1);
-    super.deactivate();
-  }
-
-  @override
   void dispose() {
-    print('dispose');
-    WidgetsBinding.instance.removeObserver(this);
+    _paddingController?.close();
     super.dispose();
   }
 
@@ -57,11 +42,18 @@ class _ListStickyHeaderState extends State<ListStickyHeader>
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(top: _topPadding),
-          child: widget.child,
+        StreamBuilder<double>(
+          stream: padding,
+          initialData: 0.0,
+          builder: (_, snap) => Padding(
+                padding: EdgeInsets.only(top: snap.data),
+                child: widget.child,
+              ),
         ),
-        Positioned(key: _key, child: widget.header),
+        Positioned(
+          key: _key,
+          child: widget.header,
+        ),
       ],
     );
   }
