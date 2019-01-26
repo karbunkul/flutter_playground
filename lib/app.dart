@@ -8,6 +8,7 @@ class MyApp extends StatelessWidget {
     List<PlaygroundBase> pages = List<PlaygroundBase>();
 
     pages.add(ListStickyHeaderPage());
+    pages.add(LazyLoadControllerPage());
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,

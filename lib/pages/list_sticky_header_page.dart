@@ -38,6 +38,7 @@ class ListStickyHeaderPage extends PlaygroundBase {
 
   @override
   Widget subtitle() {
-    return Text('виджет позволяет помещать поверх контента другой виджет');
+    return Text(
+        'виджет позволяет делать отступ на высоту виджета в парметре header');
   }
 }
