@@ -23,10 +23,19 @@ class HomePage extends StatelessWidget {
       Widget title = (page.title() != null) ? page.title() : Container();
       Widget subtitle =
           (page.subtitle() != null) ? page.subtitle() : Container();
-      return ListTile(
-        title: title,
-        subtitle: subtitle,
-        onTap: () => Navigator.of(context).pushNamed(page.route()),
+      return Card(
+        child: ListTile(
+          leading: page.type(),
+          title: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24.0),
+            child: title,
+          ),
+          subtitle: Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: subtitle,
+          ),
+          onTap: () => Navigator.of(context).pushNamed(page.route()),
+        ),
       );
     }
     return Container();

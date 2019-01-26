@@ -30,24 +30,34 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class PlaygroundPage {
-  final Widget content;
-  final Widget title;
-  final Widget subtitle;
-  final String route;
-
-  PlaygroundPage(
-      {@required this.content,
-      @required this.title,
-      this.subtitle,
-      @required this.route});
-}
-
 abstract class PlaygroundInterface {
   Widget title();
   Widget subtitle();
   String route();
+  Widget type();
+}
+
+enum PlaygroundType {
+  widget,
+  library,
 }
 
 abstract class PlaygroundBase extends StatelessWidget
-    implements PlaygroundInterface {}
+    implements PlaygroundInterface {
+  Widget type() {
+    IconData iconData;
+    switch (playgroundType()) {
+      case PlaygroundType.widget:
+        iconData = Icons.healing;
+        break;
+      default:
+        iconData = Icons.new_releases;
+    }
+
+    return Icon(iconData);
+  }
+
+  PlaygroundType playgroundType() {
+    return PlaygroundType.widget;
+  }
+}

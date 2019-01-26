@@ -9,21 +9,48 @@ class ListStickyHeader extends StatefulWidget {
   _ListStickyHeaderState createState() => _ListStickyHeaderState();
 }
 
-class _ListStickyHeaderState extends State<ListStickyHeader> {
+class _ListStickyHeaderState extends State<ListStickyHeader>
+    with WidgetsBindingObserver {
   double _topPadding = 0.0;
   final GlobalKey _key = GlobalKey();
 
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) => _postFrameCallback());
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  _postFrameCallback() {
+    _persistentFrameCallback();
     WidgetsBinding.instance
         .addPersistentFrameCallback((_) => _persistentFrameCallback());
-    super.initState();
   }
 
   _persistentFrameCallback() {
-    final RenderBox renderBox = _key.currentContext.findRenderObject();
-    setState(() {
-      _topPadding = renderBox.size.height;
-    });
+    try {
+      final RenderBox renderBox = _key.currentContext.findRenderObject();
+      setState(() {
+        _topPadding = renderBox.size.height;
+      });
+    } catch (_) {
+      setState(() {
+        _topPadding = 0.0;
+      });
+    }
+  }
+
+  @override
+  void deactivate() {
+    print('deactivate');
+    //WidgetsBinding.instance.cancelFrameCallbackWithId(1);
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    print('dispose');
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   @override
