@@ -53,6 +53,8 @@ class _ListPageState extends State<ListPage>
   AnimationController _animationController;
   Animation _animation;
 
+  List<SortItem<bool>> _sorts = [];
+
   @override
   void initState() {
     _controller = LazyLoadController<Sample>(
@@ -64,6 +66,9 @@ class _ListPageState extends State<ListPage>
     _animationController =
         AnimationController(vsync: this, duration: Duration(seconds: 1));
     _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
+
+    _sorts.add(SortItem(slug: 'slug_1', title: ''));
+    _sorts.add(SortItem(slug: 'slug_2', title: ''));
     super.initState();
   }
 
@@ -78,7 +83,8 @@ class _ListPageState extends State<ListPage>
     return ListStickyHeader(
       header: Card(
         child: ListTile(
-          title: FadeTransition(
+          title: SortByButton(sorts: _sorts),
+          subtitle: FadeTransition(
             alwaysIncludeSemantics: true,
             opacity: _animation,
             child: StreamBuilder(

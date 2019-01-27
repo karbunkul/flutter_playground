@@ -8,7 +8,7 @@ class DropdownExamplePage extends PlaygroundBase {
       appBar: AppBar(title: title()),
       body: Center(
           child: RaisedButton(
-              child: Text('dialog'), onPressed: () => _sortByDialog(context))),
+              child: Text('DIALOG'), onPressed: () => _sortByDialog(context))),
     );
   }
 
