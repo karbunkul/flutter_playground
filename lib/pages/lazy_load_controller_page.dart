@@ -64,11 +64,6 @@ class _ListPageState extends State<ListPage>
     _animationController =
         AnimationController(vsync: this, duration: Duration(seconds: 1));
     _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
-//      ..addListener(() {
-//        if (_animationController.isCompleted) {
-////          _animationController.forward();
-//        }
-//      });
     super.initState();
   }
 

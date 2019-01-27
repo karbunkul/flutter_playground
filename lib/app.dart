@@ -9,6 +9,7 @@ class MyApp extends StatelessWidget {
 
     pages.add(ListStickyHeaderPage());
     pages.add(LazyLoadControllerPage());
+    pages.add(DropdownExamplePage());
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
