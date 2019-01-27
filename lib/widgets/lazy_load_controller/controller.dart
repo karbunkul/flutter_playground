@@ -60,7 +60,7 @@ class LazyLoadController<T> {
   }
 
   /// сброс к начальному состоянию
-  void reload() {
+  void reload({bool force = false}) {
     // переходим к первому элементу
     scrollController.jumpTo(0.0);
     _itemsController.sink.add([]);

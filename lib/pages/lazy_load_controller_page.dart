@@ -44,10 +44,14 @@ class ListPage extends StatefulWidget {
   }
 }
 
-class _ListPageState extends State<ListPage> {
+class _ListPageState extends State<ListPage>
+    with SingleTickerProviderStateMixin {
   List<Sample> _items = List<Sample>.generate(
       220, (i) => Sample(title: '${i + 1} ${WordPair.random().asPascalCase}'));
   LazyLoadController<Sample> _controller;
+
+  AnimationController _animationController;
+  Animation _animation;
 
   @override
   void initState() {
@@ -57,7 +61,21 @@ class _ListPageState extends State<ListPage> {
         total: 60,
         scrollController: ScrollController());
     _controller.total = 60;
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
+    _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
+//      ..addListener(() {
+//        if (_animationController.isCompleted) {
+////          _animationController.forward();
+//        }
+//      });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController?.dispose();
+    super.dispose();
   }
 
   @override
@@ -65,9 +83,19 @@ class _ListPageState extends State<ListPage> {
     return ListStickyHeader(
       header: Card(
         child: ListTile(
-          title: Text('header'),
+          title: FadeTransition(
+            alwaysIncludeSemantics: true,
+            opacity: _animation,
+            child: StreamBuilder(
+                initialData: [],
+                stream: _controller.items,
+                builder: (_, snap) {
+                  _animationController.forward(from: 0.0);
+                  return Text('${snap.data.length} of ${_controller.total}');
+                }),
+          ),
           trailing: IconButton(
-              icon: Icon(Icons.refresh), onPressed: () => _controller.clear()),
+              icon: Icon(Icons.refresh), onPressed: () => _controller.reload()),
         ),
       ),
       child: LazyLoadList<Sample>(
