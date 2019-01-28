@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Playground',
-      theme: ThemeData.light().copyWith(primaryColor: Colors.teal),
+      theme: ThemeData.dark().copyWith(primaryColor: Colors.teal),
       home: HomePage(
         pages: pages,
       ),

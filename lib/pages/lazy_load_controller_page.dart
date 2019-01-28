@@ -67,8 +67,14 @@ class _ListPageState extends State<ListPage>
         AnimationController(vsync: this, duration: Duration(seconds: 1));
     _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
 
-    _sorts.add(SortItem(slug: 'slug_1', title: ''));
-    _sorts.add(SortItem(slug: 'slug_2', title: ''));
+    _sorts.add(SortItem(
+        slug: 'days_since_last_order', title: 'Дней с прошлого заказа'));
+    _sorts.add(
+        SortItem(slug: 'orders_at_month', title: 'Кол-во в текущем месяце'));
+    _sorts.add(
+        SortItem(slug: 'avg_orders_at_month', title: 'Среднее кол-во в месяц'));
+    _sorts.add(SortItem(
+        slug: 'avg_orders_amount_at_month', title: 'Средний чек в месяц'));
     super.initState();
   }
 
@@ -83,7 +89,13 @@ class _ListPageState extends State<ListPage>
     return ListStickyHeader(
       header: Card(
         child: ListTile(
-          title: SortByButton(sorts: _sorts),
+          title: SortByButton(
+            sorts: _sorts,
+            label: Text('Cортировка:'),
+            onChange: (sortItem) {
+              print(sortItem.slug);
+            },
+          ),
           subtitle: FadeTransition(
             alwaysIncludeSemantics: true,
             opacity: _animation,
