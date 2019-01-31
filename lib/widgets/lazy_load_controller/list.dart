@@ -15,6 +15,7 @@ class LazyLoadList<T> extends StatelessWidget {
       builder: (context, snap) {
         if (snap.hasData) {
           return ListView.builder(
+              physics: BouncingScrollPhysics(),
               itemCount: snap.data.length,
               controller: controller.scrollController,
               itemBuilder: (context, index) {

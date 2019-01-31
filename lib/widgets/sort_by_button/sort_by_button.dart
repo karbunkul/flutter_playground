@@ -98,28 +98,6 @@ class _SortByButtonState extends State<SortByButton> {
   }
 }
 
-class _SortButton extends StatelessWidget {
-  final Widget icon;
-  final Widget label;
-
-  const _SortButton({Key key, this.icon, this.label}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => null,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
-        child: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-          icon,
-          const SizedBox(width: 8.0),
-          label,
-        ]),
-      ),
-    );
-  }
-}
-
 class SortItem<T> {
   final String slug;
   final String title;

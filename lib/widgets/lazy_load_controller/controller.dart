@@ -1,6 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
+
+enum ScrollDirection {
+  IDLE,
+  UP,
+  DOWN,
+}
 
 class LazyLoadController<T> {
   final Future<List<T>> Function(int limit, int offset) onLoad;
@@ -8,9 +16,15 @@ class LazyLoadController<T> {
   final int limit;
   int _total;
 
+  ScrollDirection _lastDirection = ScrollDirection.IDLE;
+
   final _itemsController = BehaviorSubject<List<T>>(seedValue: []);
   final _offsetController = BehaviorSubject<int>(seedValue: 0);
   final _loading = BehaviorSubject<bool>(seedValue: false);
+  final _directionController =
+      BehaviorSubject<ScrollDirection>(seedValue: ScrollDirection.IDLE);
+
+  double _lastOffset = 0.0;
 
   LazyLoadController(
       {@required this.onLoad,
@@ -30,6 +44,20 @@ class LazyLoadController<T> {
 
   /// стрим с состоянием загрузки
   Stream<bool> get isLoading => _loading.asBroadcastStream();
+
+  Stream<ScrollDirection> get scrollDirection =>
+      _directionController.asBroadcastStream();
+
+  Stream<ScrollDirection> get scrollDirectionChange =>
+      _directionController.transform(
+          StreamTransformer<ScrollDirection, ScrollDirection>.fromHandlers(
+              handleData: (direction, sink) {
+        print(direction);
+        if (direction != _lastDirection) {
+          _lastDirection = direction;
+          sink.add(direction);
+        }
+      })).asBroadcastStream();
 
   int get total => _total;
 
@@ -74,6 +102,17 @@ class LazyLoadController<T> {
   }
 
   void _scrollListener() {
+//    int dx = (_lastOffset - scrollController.offset).floor();
+//
+//    if (scrollController.position.isScrollingNotifier == ValueNotifier(false)) {
+//      _directionController.add(ScrollDirection.IDLE);
+//    } else {
+//      _directionController.add((_lastOffset > scrollController.offset)
+//          ? ScrollDirection.UP
+//          : ScrollDirection.DOWN);
+//    }
+//
+//    _lastOffset = scrollController.offset;
     if (scrollController.offset >= scrollController.position.maxScrollExtent &&
         !scrollController.position.outOfRange) {
       loadMore();
@@ -83,6 +122,7 @@ class LazyLoadController<T> {
   void dispose() {
     _itemsController?.close();
     _offsetController?.close();
+    _directionController?.close();
     if (scrollController != null) {
       scrollController.removeListener(_scrollListener);
     }

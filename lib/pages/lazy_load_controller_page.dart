@@ -107,15 +107,40 @@ class _ListPageState extends State<ListPage>
                   return Text('${snap.data.length} of ${_controller.total}');
                 }),
           ),
-          trailing: IconButton(
-              icon: Icon(Icons.refresh), onPressed: () => _controller.reload()),
+          trailing: StreamBuilder<ScrollDirection>(
+              stream: _controller.scrollDirectionChange,
+              builder: (_, snap) {
+                if (snap.hasData && snap.data == ScrollDirection.UP) {
+                  return IconButton(
+                      icon: Icon(Icons.arrow_upward),
+                      color: Colors.redAccent,
+                      onPressed: () => _controller.jumpToTop(animate: true));
+                } else {
+                  return IconButton(
+                      icon: Icon(Icons.refresh),
+                      onPressed: () => _controller.reload());
+                }
+              }),
         ),
       ),
-      child: LazyLoadList<Sample>(
-        controller: _controller,
-        item: (item) => ListTile(
-              title: Text(item.title),
-            ),
+      child: NotificationListener(
+        onNotification: (t) {
+          if (t is ScrollUpdateNotification) {
+            t.debugFillDescription(['scr']);
+
+//            if (t.dragDetails == null) {
+//              print('delta idle');
+//            } else {
+//              print('delta ${t.dragDetails}');
+//            }
+          }
+        },
+        child: LazyLoadList<Sample>(
+          controller: _controller,
+          item: (item) => ListTile(
+                title: Text(item.title),
+              ),
+        ),
       ),
     );
   }
