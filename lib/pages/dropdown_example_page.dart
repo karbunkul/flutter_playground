@@ -21,7 +21,10 @@ class DropdownExamplePage extends PlaygroundBase {
           title: new Text("Sort by:"),
           children: <Widget>[
             ListTile(
-              title: Text('Дней с прошлого заказа'),
+              title: Text(
+                'Дней с прошлого заказа',
+                softWrap: true,
+              ),
               trailing: Switch(value: false, onChanged: null),
             ),
             ListTile(

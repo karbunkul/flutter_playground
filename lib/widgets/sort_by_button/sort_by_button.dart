@@ -33,7 +33,14 @@ class _SortByButtonState extends State<SortByButton> {
         child: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
           Icon(Icons.sort),
           const SizedBox(width: 8.0),
-          Text(_selected.title),
+          Flexible(
+            fit: FlexFit.loose,
+            child: Text(
+              _selected.title,
+              overflow: TextOverflow.fade,
+              softWrap: false,
+            ),
+          ),
         ]),
       ),
     );
@@ -48,14 +55,24 @@ class _SortByButtonState extends State<SortByButton> {
           children: widget.sorts.map((sort) {
             return ListTile(
               onTap: () => _onChange(context, sort.slug),
-              title: Row(
-                children: <Widget>[
-                  Radio(
-                      value: sort.slug,
-                      groupValue: _selected.slug,
-                      onChanged: (value) => _onChange(context, value)),
-                  Text(sort.title),
-                ],
+              title: Container(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Radio(
+                        value: sort.slug,
+                        groupValue: _selected.slug,
+                        onChanged: (value) => _onChange(context, value)),
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: Text(
+                        sort.title,
+                        overflow: TextOverflow.fade,
+//                        softWrap: true,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           }).toList(),
